@@ -1,0 +1,21 @@
+diff --git a/scat.py b/scat.py
+index 70df9ef..1ed410d 100755
+--- a/scat.py
++++ b/scat.py
+@@ -387,9 +387,13 @@ if __name__ == '__main__':
+ 
+     # Run process
+     if args.serial or args.usb:
+-        current_parser.stop_diag()
+-        current_parser.init_diag()
+-        current_parser.prepare_diag()
++        try: 
++            current_parser.stop_diag()
++            current_parser.init_diag()
++            current_parser.prepare_diag()
++        except Exception:
++            logger.log(logging.INFO, 'Error during diag initialization, but continuing')
++
+ 
+         signal.signal(signal.SIGINT, sigint_handler)
+ 

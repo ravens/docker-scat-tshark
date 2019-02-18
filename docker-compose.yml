@@ -1,0 +1,33 @@
+version: '2.0'
+
+services:
+ tshark:
+  container_name: tshark  
+  build: ./
+  restart: always 
+  entrypoint:
+    - tshark
+    - -t
+    - u
+    - -Y
+    - "gsmtap and not icmp"
+ scat:
+  container_name: scat  
+  build: ./
+  links:
+    - tshark
+  restart: always 
+  devices:
+   - /dev/bus/usb/002/117
+  entrypoint:
+   - python3
+   - scat.py
+   - -t
+   - "qc"
+   - -u
+   - -a
+   - 002:117
+   - -i 
+   - "0" 
+   - -H  
+   - tshark
