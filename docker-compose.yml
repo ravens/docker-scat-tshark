@@ -18,16 +18,18 @@ services:
     - tshark
   restart: always 
   devices:
-   - /dev/bus/usb/002/117
+   - /dev/bus/usb/003/050
   entrypoint:
    - python3
    - scat.py
    - -t
-   - "qc"
+   - "sec"
+   - -m
+   - e333
    - -u
    - -a
-   - 002:117
+   - 003:050
    - -i 
-   - "0" 
+   - "2" 
    - -H  
    - tshark
