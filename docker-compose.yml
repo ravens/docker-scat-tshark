@@ -1,5 +1,16 @@
 version: '2.0'
 
+networks:
+  diag_network:
+    driver: bridge
+    driver_opts:     
+      com.docker.network.bridge.name: diag
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.72.0/24
+          gateway: 192.168.72.1
+
 services:
  tshark:
   container_name: tshark  
@@ -11,6 +22,13 @@ services:
     - u
     - -Y
     - "gsmtap and not icmp"
+    #- -w
+    #- /data/capture.pcap
+  volumes: 
+    - ./data:/data
+  networks:
+    diag_network:
+      ipv4_address: 192.168.72.10
  scat:
   container_name: scat  
   build: ./
@@ -18,18 +36,17 @@ services:
     - tshark
   restart: always 
   devices:
-   - /dev/bus/usb/003/050
+   - /dev/bus/usb/003/024
+  networks:
+    diag_network:
+      ipv4_address: 192.168.72.20
   entrypoint:
    - python3
    - scat.py
    - -t
-   - "sec"
-   - -m
-   - e333
+   - "qc"
    - -u
    - -a
-   - 003:050
-   - -i 
-   - "2" 
+   - 003:024
    - -H  
-   - tshark
+   - "192.168.72.10"
